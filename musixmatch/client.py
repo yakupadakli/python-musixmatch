@@ -1,6 +1,6 @@
 import requests
 
-from musixmatch.expections import MusixmatchException
+from musixmatch.expections import MusixmatchException, NotFound
 
 
 class Client(object):
@@ -12,9 +12,12 @@ class Client(object):
 
     def __init__(self, api, **kwargs):
         self.api = api
+        self.system_error_message = "Unknown System Error"
 
     def _request(self, url, method, params=None, data=None, **kwargs):
         url = "%s%s" % (self.api.base_url, url)
+        params = params or {}
+        params.update(self._get_default_params())
         headers = kwargs.pop("headers", {})
 
         try:
@@ -23,10 +26,16 @@ class Client(object):
             raise MusixmatchException("Connection error: %s" % e)
 
         try:
-            if not self._is_2xx(response.status_code):
-                error = response.json().get("message")
-                raise MusixmatchException(error)
             result = response.json()
+            if not self._is_2xx(response.status_code):
+                raise MusixmatchException(self.system_error_message)
+            else:
+                status_code = result["message"]["header"]["status_code"]
+                if self._is_404(status_code):
+                    raise NotFound()
+                elif self._is_4xx(status_code):
+                    raise MusixmatchException(self.system_error_message)
+
         except ValueError as e:
             result = None
         return result
@@ -43,6 +52,9 @@ class Client(object):
     def _put(self, url, data=None, **kwargs):
         return self._request(url, "put", data=data, **kwargs)
 
+    def _get_default_params(self):
+        return {"apikey": self.api.api_key, "format": "json"}
+
     @staticmethod
     def _is_1xx(status_code):
         return 100 <= status_code <= 199
@@ -58,6 +70,10 @@ class Client(object):
     @staticmethod
     def _is_4xx(status_code):
         return 400 <= status_code <= 499
+
+    @staticmethod
+    def _is_404(status_code):
+        return status_code == 404
 
     @staticmethod
     def _is_5xx(status_code):

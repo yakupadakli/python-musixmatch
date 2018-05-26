@@ -14,3 +14,15 @@ class Musixmatch(object):
         """
         self.api_key = api_key
         self.base_url = "%s/%s" % (self.BASE_URL, self.VERSION)
+
+    @property
+    def artist(self):
+        """
+        Musixmatch Artist Operations
+
+        Available methods:
+
+
+        get: Get the artist data.
+        """
+        return Artist(api=self)
