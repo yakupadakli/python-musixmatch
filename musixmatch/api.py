@@ -1,5 +1,6 @@
 from musixmatch.album import Album
 from musixmatch.artist import Artist
+from musixmatch.track import Track
 
 
 class Musixmatch(object):
@@ -43,3 +44,15 @@ class Musixmatch(object):
         tracks: Get the songs of an album.
         """
         return Album(api=self)
+
+    @property
+    def track(self):
+        """
+        Musixmatch Track Operations
+
+        Available methods:
+
+
+        get: Get a song by Musixmatch id.
+        """
+        return Track(api=self)
