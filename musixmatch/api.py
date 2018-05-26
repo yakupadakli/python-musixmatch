@@ -39,5 +39,6 @@ class Musixmatch(object):
 
 
         get: Get the album object using the Musixmatch id.
+        tracks: Get the songs of an album.
         """
         return Album(api=self)

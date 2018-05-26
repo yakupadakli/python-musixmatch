@@ -103,3 +103,25 @@ class Album(Model):
             album.secondary_genres = Genre._parse_list(secondary_genres, sub_item=True)
 
         return album
+
+
+class Track(Model):
+    _remove_tag = "track_"
+
+    def __init__(self, **kwargs):
+        super(Track, self).__init__(**kwargs)
+        self._repr_values = {"name": "Name", "id": "Id", "album_name": "Album Name"}
+
+    @classmethod
+    def _parse(cls, data, sub_item=False):
+        track = super(Track, cls)._parse(data, sub_item=sub_item)
+
+        if hasattr(track, "primary_genres"):
+            primary_genres = map(lambda x: x.get("music_genre"),  track.primary_genres.get("music_genre_list", []))
+            track.primary_genres = Genre._parse_list(primary_genres, sub_item=True)
+
+        if hasattr(track, "secondary_genres"):
+            secondary_genres = map(lambda x: x.get("music_genre"), track.secondary_genres.get("music_genre_list", []))
+            track.secondary_genres = Genre._parse_list(secondary_genres, sub_item=True)
+
+        return track
