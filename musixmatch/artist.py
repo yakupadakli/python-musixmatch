@@ -38,6 +38,7 @@ class Artist(Client):
 
         :return [List]: Artist List.
         """
+        assert page_size <= self.MAX_PAGE_SIZE, "Page size must be lower than %s" % self.MAX_PAGE_SIZE
         url = "/artist.related.get"
         params = {"artist_id": artist_id, "page": page, "page_size": page_size + 1}
         result = self._get(url, params=params)

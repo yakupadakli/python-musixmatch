@@ -7,7 +7,7 @@ class ResultSet(list):
 
 class Model(object):
     _not_found_error_class = NotFound
-    remove_tag = None
+    _remove_tag = None
 
     def __init__(self, **kwargs):
         self._repr_values = {"id": "Id"}
@@ -20,7 +20,7 @@ class Model(object):
 
         instance = cls() if data else None
         for key, value in data.items():
-            key = key.split(cls.remove_tag)[-1]
+            key = key.split(cls._remove_tag)[-1]
             if type(value) == str:
                 value = value.strip()
             setattr(instance, key, value)
@@ -43,7 +43,7 @@ class Model(object):
 
 
 class Artist(Model):
-    remove_tag = "artist_"
+    _remove_tag = "artist_"
 
     def __init__(self, **kwargs):
         super(Artist, self).__init__(**kwargs)
@@ -68,7 +68,7 @@ class Artist(Model):
 
 
 class Genre(Model):
-    remove_tag = "music_genre_"
+    _remove_tag = "music_genre_"
 
     def __init__(self, **kwargs):
         super(Genre, self).__init__(**kwargs)
@@ -76,8 +76,30 @@ class Genre(Model):
 
 
 class ArtistAlias(Model):
-    remove_tag = "artist_"
+    _remove_tag = "artist_"
 
     def __init__(self, **kwargs):
         super(ArtistAlias, self).__init__(**kwargs)
         self._repr_values = {"alias": "Alias"}
+
+
+class Album(Model):
+    _remove_tag = "album_"
+
+    def __init__(self, **kwargs):
+        super(Album, self).__init__(**kwargs)
+        self._repr_values = {"name": "Name", "id": "Id"}
+
+    @classmethod
+    def _parse(cls, data, sub_item=False):
+        album = super(Album, cls)._parse(data, sub_item=sub_item)
+
+        if hasattr(album, "primary_genres"):
+            primary_genres = map(lambda x: x.get("music_genre"),  album.primary_genres.get("music_genre_list", []))
+            album.primary_genres = Genre._parse_list(primary_genres, sub_item=True)
+
+        if hasattr(album, "secondary_genres"):
+            secondary_genres = map(lambda x: x.get("music_genre"), album.secondary_genres.get("music_genre_list", []))
+            album.secondary_genres = Genre._parse_list(secondary_genres, sub_item=True)
+
+        return album

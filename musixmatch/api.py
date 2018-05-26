@@ -1,3 +1,4 @@
+from musixmatch.album import Album
 from musixmatch.artist import Artist
 
 
@@ -28,3 +29,15 @@ class Musixmatch(object):
         search: Search for artists.
         """
         return Artist(api=self)
+
+    @property
+    def album(self):
+        """
+        Musixmatch Artist Operations
+
+        Available methods:
+
+
+        get: Get the album object using the Musixmatch id.
+        """
+        return Album(api=self)
