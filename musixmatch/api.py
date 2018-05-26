@@ -24,5 +24,6 @@ class Musixmatch(object):
 
 
         get: Get the artist data.
+        related: Get related artists.
         """
         return Artist(api=self)
