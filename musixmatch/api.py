@@ -54,5 +54,6 @@ class Musixmatch(object):
 
 
         get: Get a song by Musixmatch id.
+        lyrics: Get the lyrics for given track.
         """
         return Track(api=self)

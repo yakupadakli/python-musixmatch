@@ -125,3 +125,11 @@ class Track(Model):
             track.secondary_genres = Genre._parse_list(secondary_genres, sub_item=True)
 
         return track
+
+
+class Lyrics(Model):
+    _remove_tag = "lyrics_"
+
+    def __init__(self, **kwargs):
+        super(Lyrics, self).__init__(**kwargs)
+        self._repr_values = {"id": "Id", "language": "Language"}
