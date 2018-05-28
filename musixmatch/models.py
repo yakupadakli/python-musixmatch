@@ -133,3 +133,11 @@ class Lyrics(Model):
     def __init__(self, **kwargs):
         super(Lyrics, self).__init__(**kwargs)
         self._repr_values = {"id": "Id", "language": "Language"}
+
+
+class Snippet(Model):
+    _remove_tag = "snippet_"
+
+    def __init__(self, **kwargs):
+        super(Snippet, self).__init__(**kwargs)
+        self._repr_values = {"body": "Body", "language": "Language"}

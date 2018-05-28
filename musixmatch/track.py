@@ -1,10 +1,11 @@
 from musixmatch.client import Client
 from musixmatch.models import Lyrics as LyricsModel
+from musixmatch.models import Snippet as SnippetModel
 from musixmatch.models import Track as TrackModel
 
 
 class Track(Client):
-    """Album operations."""
+    """Track operations."""
     MAX_PAGE_SIZE = 99
     SORT_ASC = "asc"
     SORT_DESC = "desc"
@@ -67,7 +68,7 @@ class Track(Client):
         :param query: Search this parameter within the artist name.
         :param artist_id: Filter by this artist id.
         :param genre_id: Filter by this music category id.
-        :param lyrics_lang: Filter by the lyrics language (en,it,..).
+        :param lyrics_lang: Filter by the lyrics language (en, it, ..).
         :param has_lyrics: Filter only contents with lyrics.
         :param artist_rating_sort: Sort by our popularity index for artists.
         :param track_rating_sort: Sort by our popularity index for tracks.
@@ -94,3 +95,18 @@ class Track(Client):
         result = self._get(url, params=params)
         track_list = map(lambda x: x["track"], result["message"]["body"]["track_list"])
         return TrackModel._parse_list(track_list)
+
+    def snippet(self, track_id):
+        """
+        Get the snippet for a given track.
+
+        :type track_id: string
+
+        :param track_id: The Musixmatch track id
+
+        :return [Snippet]: Snippet Object.
+        """
+        url = "/track.snippet.get"
+        params = {"track_id": track_id}
+        result = self._get(url, params=params)
+        return SnippetModel._parse(result["message"]["body"]["snippet"])
