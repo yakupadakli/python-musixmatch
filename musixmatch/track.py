@@ -52,6 +52,23 @@ class Track(Client):
         result = self._get(url, params=params)
         return LyricsModel._parse(result["message"]["body"]["lyrics"])
 
+    def lyrics_translation(self, track_id, language):
+        """
+        Get a translated lyrics for a given language.
+
+        :type track_id: string
+        :type language: string
+
+        :param track_id: The Musixmatch track id.
+        :param language: The language of the translated lyrics (ISO 639-1).
+
+        :return [Lyrics]: Lyrics Object.
+        """
+        url = "/track.lyrics.translation.get"
+        params = {"track_id": track_id, "selected_language": language}
+        result = self._get(url, params=params)
+        return LyricsModel._parse(result["message"]["body"]["lyrics"])
+
     def search(self, query, artist_id=None, genre_id=None, lyrics_lang=None, has_lyrics=None,
                artist_rating_sort=SORT_ASC, track_rating_sort=SORT_ASC, page=1, page_size=MAX_PAGE_SIZE):
         """

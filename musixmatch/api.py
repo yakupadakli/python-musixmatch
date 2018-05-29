@@ -55,6 +55,7 @@ class Musixmatch(object):
 
         get: Get a song by Musixmatch id.
         lyrics: Get the lyrics for given track.
+        lyrics_translation: Get a translated lyrics for a given language.
         search: Search for tracks.
         snippet: Get the snippet for a given track.
         subtitle: Retrieve the subtitle of a track.

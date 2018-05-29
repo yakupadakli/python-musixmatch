@@ -134,6 +134,22 @@ class Lyrics(Model):
         super(Lyrics, self).__init__(**kwargs)
         self._repr_values = {"id": "Id", "language": "Language"}
 
+    @classmethod
+    def _parse(cls, data, sub_item=False):
+        lyrics = super(Lyrics, cls)._parse(data, sub_item=sub_item)
+
+        if hasattr(lyrics, "translated_lyrics"):
+            lyrics.translated_lyrics = TranslatedLyrics._parse_list(lyrics.translated_lyrics, sub_item=True)
+
+        return lyrics
+
+
+class TranslatedLyrics(Model):
+
+    def __init__(self, **kwargs):
+        super(TranslatedLyrics, self).__init__(**kwargs)
+        self._repr_values = {"language": "Language"}
+
 
 class Snippet(Model):
     _remove_tag = "snippet_"
