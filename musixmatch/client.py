@@ -1,3 +1,4 @@
+# coding=utf-8
 import requests
 
 from musixmatch.expections import MusixmatchException, NotFound
@@ -9,6 +10,17 @@ class Client(object):
 
     HTTP connections to and communication with Musixmatch API.
     """
+    STATUS_CODES = {
+        "400": "The request had bad syntax or was inherently impossible to be satisfied.",
+        "401": "Authentication failed, probably because of invalid/missing API key.",
+        "402": "The usage limit has been reached, "
+             "either you exceeded per day requests limits or your balance is insufficient.",
+        "403": "You are not authorized to perform this operation.",
+        "404": "The requested resource was not found.",
+        "405": "The requested method was not found.",
+        "500": "Ops. Something were wrong.",
+        "503": "Our system is a bit busy at the moment and your request can’t be satisfied.",
+    }
 
     def __init__(self, api, **kwargs):
         self.api = api
@@ -31,10 +43,8 @@ class Client(object):
                 raise MusixmatchException(self.system_error_message)
             else:
                 status_code = result["message"]["header"]["status_code"]
-                if self._is_404(status_code):
-                    raise NotFound()
-                elif self._is_4xx(status_code):
-                    raise MusixmatchException(self.system_error_message)
+                if not self._is_2xx(status_code):
+                    raise MusixmatchException(self._get_status_code_error(status_code))
 
         except ValueError as e:
             result = None
@@ -54,6 +64,9 @@ class Client(object):
 
     def _get_default_params(self):
         return {"apikey": self.api.api_key, "format": "json"}
+
+    def _get_status_code_error(self, status_code):
+        return self.STATUS_CODES.get(str(status_code), self.system_error_message)
 
     @staticmethod
     def _is_1xx(status_code):
