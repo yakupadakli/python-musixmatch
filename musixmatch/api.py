@@ -1,5 +1,6 @@
 from musixmatch.album import Album
 from musixmatch.artist import Artist
+from musixmatch.chart import Chart
 from musixmatch.track import Track
 
 
@@ -61,3 +62,15 @@ class Musixmatch(object):
         subtitle: Retrieve the subtitle of a track.
         """
         return Track(api=self)
+
+    @property
+    def chart(self):
+        """
+        Musixmatch Track Operations
+
+        Available methods:
+
+
+        artist: Get the list of the top artists of a given country.
+        """
+        return Chart(api=self)

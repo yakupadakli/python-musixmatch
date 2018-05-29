@@ -45,6 +45,5 @@ class Album(Client):
         url = "/album.tracks.get"
         params = {"album_id": album_id, "f_has_lyrics": has_lyrics, "page": page, "page_size": page_size + 1}
         result = self._get(url, params=params)
-        print(result)
         track_list = map(lambda x: x["track"], result["message"]["body"]["track_list"])
         return TrackModel._parse_list(track_list)
