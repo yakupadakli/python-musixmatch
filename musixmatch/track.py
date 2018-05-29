@@ -1,6 +1,8 @@
+# coding=utf-8
 from musixmatch.client import Client
 from musixmatch.models import Lyrics as LyricsModel
 from musixmatch.models import Snippet as SnippetModel
+from musixmatch.models import Subtitle as SubtitleModel
 from musixmatch.models import Track as TrackModel
 
 
@@ -100,6 +102,10 @@ class Track(Client):
         """
         Get the snippet for a given track.
 
+        A lyrics snippet is a very short representation of a song lyrics.
+        It’s usually twenty to a hundred characters long and
+        it’s calculated extracting a sequence of words from the lyrics.
+
         :type track_id: string
 
         :param track_id: The Musixmatch track id
@@ -110,3 +116,31 @@ class Track(Client):
         params = {"track_id": track_id}
         result = self._get(url, params=params)
         return SnippetModel._parse(result["message"]["body"]["snippet"])
+
+    def subtitle(self, common_track_id, subtitle_format="lrc", subtitle_length=None):
+        """
+        Retrieve the subtitle of a track.
+
+        Return the subtitle of a track in LRC or DFXP format.
+        Refer to Wikipedia LRC format page or DFXP format on W3c for format specifications.
+
+        :type common_track_id: string
+        :type subtitle_format: string
+        :type subtitle_length: int
+
+        :param common_track_id: The Musixmatch commontrack id.
+        :param subtitle_format: The format of the subtitle (lrc,dfxp,stledu).
+        :param subtitle_length: The desired length of the subtitle (seconds).
+
+        :return [Snippet]: Snippet Object.
+        """
+        subtitle_formats = ["lrc", "dfxp", "stledu"]
+        assert subtitle_format in subtitle_formats, "Sorting must be in %s" % str(subtitle_formats)
+        url = "/track.subtitle.get"
+        params = {
+            "commontrack_id": common_track_id,
+            "subtitle_format": subtitle_format,
+            "f_subtitle_length": subtitle_length
+        }
+        result = self._get(url, params=params)
+        return SubtitleModel._parse(result["message"]["body"]["snippet"])

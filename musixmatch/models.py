@@ -141,3 +141,11 @@ class Snippet(Model):
     def __init__(self, **kwargs):
         super(Snippet, self).__init__(**kwargs)
         self._repr_values = {"body": "Body", "language": "Language"}
+
+
+class Subtitle(Model):
+    _remove_tag = "subtitle_"
+
+    def __init__(self, **kwargs):
+        super(Subtitle, self).__init__(**kwargs)
+        self._repr_values = {"id": "Id", "language": "Language"}

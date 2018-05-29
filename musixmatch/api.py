@@ -57,5 +57,6 @@ class Musixmatch(object):
         lyrics: Get the lyrics for given track.
         search: Search for tracks.
         snippet: Get the snippet for a given track.
+        subtitle: Retrieve the subtitle of a track.
         """
         return Track(api=self)
