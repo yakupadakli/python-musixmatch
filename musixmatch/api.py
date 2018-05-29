@@ -72,5 +72,6 @@ class Musixmatch(object):
 
 
         artist: Get the list of the top artists of a given country.
+        tracks: Get the list of the top songs of a given country.
         """
         return Chart(api=self)
