@@ -27,7 +27,7 @@ class Chart(Client):
         """
         assert page_size <= self.MAX_PAGE_SIZE, "Page size must be lower than %s" % self.MAX_PAGE_SIZE
         url = "/chart.artists.get"
-        params = {"country": country, "page": page, "page_size": page_size + 1}
+        params = {"country": country, "page": page, "page_size": page_size}
         result = self._get(url, params=params)
         artist_list = map(lambda x: x["artist"], result["message"]["body"]["artist_list"])
         return ArtistModel._parse_list(artist_list)
@@ -50,7 +50,7 @@ class Chart(Client):
         """
         assert page_size <= self.MAX_PAGE_SIZE, "Page size must be lower than %s" % self.MAX_PAGE_SIZE
         url = "/chart.tracks.get"
-        params = {"country": country, "f_has_lyrics": has_lyrics, "page": page, "page_size": page_size + 1}
+        params = {"country": country, "f_has_lyrics": has_lyrics, "page": page, "page_size": page_size}
         result = self._get(url, params=params)
         track_list = map(lambda x: x["track"], result["message"]["body"]["track_list"])
         return TrackModel._parse_list(track_list)
