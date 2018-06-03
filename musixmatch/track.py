@@ -109,7 +109,7 @@ class Track(Client):
             "s_artist_rating": artist_rating_sort,
             "s_track_rating": track_rating_sort,
             "page": page,
-            "page_size": page_size + 1
+            "page_size": page_size
         }
         result = self._get(url, params=params)
         track_list = map(lambda x: x["track"], result["message"]["body"]["track_list"])
