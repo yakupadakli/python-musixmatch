@@ -42,7 +42,7 @@ class Artist(Client):
         """
         assert page_size <= self.MAX_PAGE_SIZE, "Page size must be lower than %s" % self.MAX_PAGE_SIZE
         url = "/artist.related.get"
-        params = {"artist_id": artist_id, "page": page, "page_size": page_size + 1}
+        params = {"artist_id": artist_id, "page": page, "page_size": page_size}
         result = self._get(url, params=params)
         artist_list = map(lambda x: x["artist"], result["message"]["body"]["artist_list"])
         return ArtistModel._parse_list(artist_list)
@@ -65,7 +65,7 @@ class Artist(Client):
         """
         assert page_size <= self.MAX_PAGE_SIZE, "Page size must be lower than %s" % self.MAX_PAGE_SIZE
         url = "/artist.search"
-        params = {"q_artist": query, "f_artist_id": artist_id, "page": page, "page_size": page_size + 1}
+        params = {"q_artist": query, "f_artist_id": artist_id, "page": page, "page_size": page_size}
         result = self._get(url, params=params)
         artist_list = map(lambda x: x["artist"], result["message"]["body"]["artist_list"])
         return ArtistModel._parse_list(artist_list)
@@ -96,7 +96,7 @@ class Artist(Client):
             "g_album_name": group,
             "s_release_date": sort,
             "page": page,
-            "page_size": page_size + 1
+            "page_size": page_size
         }
         result = self._get(url, params=params)
         album_list = map(lambda x: x["album"], result["message"]["body"]["album_list"])
